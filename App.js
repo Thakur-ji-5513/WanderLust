@@ -7,7 +7,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const { validateListing } = require("./utils/validate.js"); // Import the validation middleware
+const { validateListing } = require("./utils/validate.js"); 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderLust";
 
 main()
@@ -65,7 +65,7 @@ app.get(
 // Create route with validation middleware
 app.post(
   "/listings",
-  validateListing, // Use the validation middleware here
+  validateListing, 
   wrapAsync(async (req, res, next) => {
     const newListing = new Listing(req.body.listing);
     await newListing.save();
@@ -105,9 +105,10 @@ app.delete(
 );
 
 // Middleware for handling invalid routes
-app.all("*", (req, res, next) => {
+app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found!"));
 });
+
 
 // General error handling middleware
 app.use((err, req, res, next) => {
