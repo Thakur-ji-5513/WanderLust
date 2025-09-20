@@ -9,6 +9,8 @@ const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { validateListing } = require("./utils/validate.js"); 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderLust";
+const Review = require("./models/reviews.js");
+const { reviewSchema } = require("./Schema.js");
 
 main()
   .then(() => {
@@ -33,6 +35,16 @@ app.get("/", (req, res) => {
   res.send("Root here!");
 });
 
+const validateReview = (req, res, next) => {
+  let { error } = reviewSchema.validate(req.body);
+  if (error) {
+    let errMsg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(400, errMsg);
+  } else {
+    next();
+  }
+};
+
 // Index route
 app.get(
   "/listings",
@@ -52,7 +64,7 @@ app.get(
   "/listings/:id",
   wrapAsync(async (req, res, next) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate("reviews");
 
     if (!listing) {
       return next(new ExpressError(404, "Listing not found!"));
@@ -99,10 +111,36 @@ app.delete(
   "/listings/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    await Listing.findByIdAndDelete(id);
+    await Listing.findOneAndDelete({ _id: id });
     res.redirect("/listings");
   })
 );
+
+//Reviews
+//Post review
+app.post("/listings/:id/reviews", validateReview, wrapAsync( async(req,res) =>{
+  let listing  = await Listing.findById(req.params.id);
+  let newReview = new Review(req.body.review);
+
+  listing.reviews.push(newReview);
+
+  await newReview.save();
+  await listing.save();
+
+  res.redirect(`/listings/${listing._id}`);
+}));
+
+//Delete review route
+
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync( async(req,res) =>{
+  let {id, reviewId} =req.params;
+
+  await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
+  await Review.findByIdAndDelete(reviewId);
+
+  res.redirect(`/listings/${id}`);
+}));
+
 
 // Middleware for handling invalid routes
 app.use((req, res, next) => {
