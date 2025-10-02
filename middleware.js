@@ -1,5 +1,5 @@
 const Listing = require("./models/listing");
-const Review = require("./models/listing");
+const Review = require("./models/reviews");
 
 module.exports.isLoggedIn= (req,res,next) =>{
     if(!req.isAuthenticated()){

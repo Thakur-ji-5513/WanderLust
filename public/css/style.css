@@ -1,10 +1,13 @@
 body {
-    font-family: "Plus Jakarta Sans", sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    font-family: "Plus Jakarta Sans", sans-serif !important;
 }
 
+main {
+    flex-grow: 1;
+}
 .container {
     flex: 1;
 }
