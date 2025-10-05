@@ -1,3 +1,7 @@
+if( process.env.NODE_ENV != "production"){
+  require("dotenv").config();
+}
+
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
@@ -12,7 +16,7 @@ const flash = require("connect-flash");
 const passport= require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/users.js");
- 
+
 
 
 const listingRouter = require("./routes/listing.js");
@@ -99,3 +103,9 @@ app.use((err, req, res, next) => {
 app.listen(8080, () => {
   console.log("Listening on port 8080");
 });
+
+
+//BUGS
+
+// a bug where it says id is not defined whenever editing a listing
+// site says page not found when loging in after pressing something like add  review.
