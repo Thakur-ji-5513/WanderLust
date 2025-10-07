@@ -10,7 +10,8 @@ const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderLust";
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderLust";
+const dbUrl = process.env.ATLASDB_URL;
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport= require("passport");
@@ -31,8 +32,11 @@ main()
     console.log(err);
   });
 
+// async function main() {
+//   await mongoose.connect(MONGO_URL);
+// }
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dbUrl);
 }
 
 app.set("view engine", "ejs");
