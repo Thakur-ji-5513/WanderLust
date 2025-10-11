@@ -113,6 +113,7 @@ main {
 .edit-btn {
     background-color: #fe424d !important;
     border: none !important;
+    margin-right: 1rem !important;
 }
 
 /* show page */
@@ -124,6 +125,8 @@ main {
 .btns{
     display: flex;
 }
+
+
 
 .show-card{
     padding-left: 0;
