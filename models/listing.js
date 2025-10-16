@@ -4,29 +4,39 @@ const Review = require("./reviews.js");
 const { ref } = require("joi");
 
 const listingSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: String,
-  // In models/listing.js
-  image: {
-    url: String,
-    filename: String,
-  },
-  price: Number,
-  location: String,
-  country: String,
-  reviews: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Review",
+    title: {
+        type: String,
+        required: true
     },
-  ],
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  }
+    description: String,
+    image: {
+        url: String,
+        filename: String,
+    },
+    price: Number,
+    location: String,
+    country: String,
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Review",
+        },
+    ],
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
+    geometry: {
+        type: {
+            type: String, 
+            enum: ['Point'], // 'location.type' 'Point'
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    }
 });
 
 listingSchema.post("findOneAndDelete", async (listing) => {

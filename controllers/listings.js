@@ -1,4 +1,6 @@
 const Listing = require("../models/listing");
+const mbxGeocoding = require("@maptiler/client");
+mbxGeocoding.config.apiKey = process.env.MAPTILER_API_KEY;
 
 module.exports.index = async (req, res) => {
   const allListings = await Listing.find({});
@@ -24,19 +26,38 @@ module.exports.showListing = async (req, res, next) => {
     res.redirect("/listings");
   }
   console.log(listing);
-  res.render("listings/show.ejs", { listing });
+  res.render("listings/show", {
+  listing,
+  maptilerKey: process.env.MAPTILER_API_KEY
+});
 };
 
-module.exports.createListing = async (req, res, next) => {
-  let url = req.file.path;
-  let filename = req.file.filename;
 
-  const newListing = new Listing(req.body.listing);
-  newListing.owner = req.user._id;
-  newListing.image = { url, filename };
-  await newListing.save();
-  req.flash("success", "New Listing Created!");
-  res.redirect("/listings");
+
+module.exports.createListing = async (req, res, next) => {
+    try {
+        const geoData = await mbxGeocoding.geocoding.forward(req.body.listing.location, { limit: 1 });
+
+        if (!geoData.features || !geoData.features.length) {
+            req.flash('error', 'Location not found. Please enter a valid location.');
+            return res.redirect('/listings/new');
+        }
+
+        const newListing = new Listing(req.body.listing);
+        newListing.owner = req.user._id;
+        newListing.image = { url: req.file.path, filename: req.file.filename };
+        newListing.geometry = geoData.features[0].geometry;
+
+        let savedListing = await newListing.save();
+        console.log(savedListing);
+
+        req.flash("success", "New Listing Created!");
+        res.redirect("/listings");
+    } catch (err) {
+        console.error("Error creating listing:", err);
+        req.flash("error", "Something went wrong while creating the listing.");
+        res.redirect("/listings/new");
+    }
 };
 
 module.exports.renderEditForm = async (req, res) => {
