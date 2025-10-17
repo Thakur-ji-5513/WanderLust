@@ -48,10 +48,10 @@ app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
 
-const sessionOptions={
+const sessionOptions = {
   secret: "mysupersecretcode",
   resave: false,
-  saveUnitialized: true,
+  saveUninitialized: true, 
   cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
