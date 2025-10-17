@@ -1,4 +1,4 @@
-if( process.env.NODE_ENV != "production"){
+if(process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
 
@@ -107,12 +107,10 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("Error.ejs", { message });
 });
 
-app.listen(8080, () => {
-  console.log("Listening on port 8080");
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
 
-//BUGS
 
-// a bug where it says id is not defined whenever editing a listing
-// site says page not found when loging in after pressing something like add  review.

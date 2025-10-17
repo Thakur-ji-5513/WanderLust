@@ -1,11 +1,17 @@
 {
-  "name": "airbnd",
+  "name": "wanderLust",
   "version": "1.0.0",
-  "description": "",
+  "description": "Travel accommodation booking platform",
   "main": "index.js",
   "scripts": {
-    "start": "node App.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "db:migrate": "node production/migrationDb.js",
+    "db:verify": "node production/verifyDb.js",
+    "db:seed": "node init/index.js"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "keywords": [],
   "author": "Rudraksh",
