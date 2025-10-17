@@ -1,5 +1,6 @@
 <% layout("/layouts/boilerplate") %>
-    <form method="post" action="/listings/<%= listing._id %>?_method=put" novalidate class="needs-validation" enctype="multipart/form-data">
+    <form method="post" action="/listings/<%= listing._id %>?_method=put" novalidate class="needs-validation"
+        enctype="multipart/form-data">
         <div class="row mt-3">
             <h3>Edit your listing!</h3>
 
@@ -24,7 +25,7 @@
                 Original Image Preview :<br><br>
                 <img src="<%= originalImage %>" alt="listing image">
             </div>
-            
+
             <div class="mb-3 ">
                 <label for="image" class="form-label">Upload New Image</label>
                 <input type="file" name="listing[image]" value="<%= listing.image %>" class="form-control">
@@ -39,24 +40,52 @@
                     </div>
                 </div>
 
-                <div class="mb-3 col-md-8">
-                    <label for="country" class="form-label">country</label>
-                    <input type="text" name="listing[country]" value="<%= listing.country %>" class="form-control"
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location *</label>
+                    <input type="text" id="location" name="listing[location]" class="form-control"
+                        placeholder="Search for a city, address, or landmark..." value="<%= listing.location || '' %>"
                         required>
+                    <div id="location-suggestions" class="list-group mt-2"
+                        style="display: none; position: absolute; z-index: 1000; width: 100%;"></div>
+                    <small class="form-text text-muted">Start typing to see location suggestions. Select one to confirm
+                        coordinates.</small>
+                    <input type="hidden" id="latitude" name="listing[latitude]" value="<%= listing.latitude || '' %>">
+                    <input type="hidden" id="longitude" name="listing[longitude]"
+                        value="<%= listing.longitude || '' %>">
+                    <div id="location-confirmation" class="alert alert-success mt-2" style="display: none;">
+                        <i class="fas fa-check-circle"></i> Location coordinates confirmed!
+                    </div>
                     <div class="invalid-feedback">
-                        Please Enter a valid countary name.
+                        Please select a location from the suggestions.
                     </div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label for=" location" class="form-label">Location</label>
-                <input type="text" name="listing[location]" value="<%= listing.location %>" class="form-control"
-                    required>
-                <div class="invalid-feedback">
-                    Please Enter a valid Location.
-                </div>
-            </div>
-            <button class="btn btn-dark edit-btn mt-3">Edit</button>
-        </div>
+
+                <button class="btn btn-dark edit-btn mt-3">Edit</button>
     </form>
-    
+
+    <!-- Scripts in this order -->
+    <script src="/js/location-search.js"></script>
+
+    <script>
+        // Pass the MapTiler API key to the frontend
+        const maptilerKey = '<%= typeof maptilerKey !== "undefined" ? maptilerKey : "" %>';
+    </script>
+    </form>
+    <script src="/js/location-search.js"></script>
+
+    <script>
+        // Pass the MapTiler API key to the frontend
+        const maptilerKey = '<%= typeof maptilerKey !== "undefined" ? maptilerKey : "" %>';
+    </script>
+
+    <script>
+        // Edit page specific initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            const lat = document.getElementById('latitude').value;
+            const lng = document.getElementById('longitude').value;
+            if (lat && lng) {
+                document.getElementById('location-confirmation').style.display = 'block';
+                document.getElementById('location').classList.add('is-valid');
+            }
+        });
+    </script>

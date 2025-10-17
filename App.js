@@ -78,6 +78,8 @@ app.use((req,res,next) =>{
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
+  res.locals.maptilerKey = process.env.MAPTILER_API_KEY;
+  res.locals.currentYear = new Date().getFullYear();
   next();
 });
 

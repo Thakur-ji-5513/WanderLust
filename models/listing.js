@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const Review = require("./reviews.js");
 const { ref } = require("joi");
 
+
 const listingSchema = new Schema({
     title: {
         type: String,
@@ -36,6 +37,18 @@ const listingSchema = new Schema({
             type: [Number],
             required: true
         }
+    },
+     confirmedLatitude: {
+        type: Number,
+        required: false 
+    },
+    confirmedLongitude: {
+        type: Number,
+        required: false
+    },
+    formattedAddress: {
+        type: String,
+        required: false
     }
 });
 

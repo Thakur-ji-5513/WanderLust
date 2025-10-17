@@ -29,7 +29,7 @@
 
                 <div class="mb-3">
                     <label for="image" class="form-label">Upload Image </label>
-                    <input type="file" name="listing[image]"  class="form-control" required>
+                    <input type="file" name="listing[image]" class="form-control" required>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -65,13 +65,22 @@
 
                 <div class="mb-3">
                     <label for="location" class="form-label">location</label>
-                    <input type="text" name="listing[location]" placeholder="enter location" class="form-control"
-                        required>
+                    <input type="text" id="location" name="listing[location]"
+                        placeholder="Search for a city, address, or landmark..." class="form-control" required>
+                    <div id="location-suggestions" class="list-group mt-2"
+                        style="display: none; position: absolute; z-index: 1000; width: 100%;"></div>
+                    <small class="form-text text-muted">Start typing to see location suggestions. Select one to confirm
+                        coordinates.</small>
+                    <input type="hidden" id="latitude" name="listing[latitude]">
+                    <input type="hidden" id="longitude" name="listing[longitude]">
+                    <div id="location-confirmation" class="alert alert-success mt-2" style="display: none;">
+                        <i class="fas fa-check-circle"></i> Location coordinates confirmed!
+                    </div>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
                     <div class="invalid-feedback">
-                        Please Enter a valid Location.
+                        Please select a Location from suggestions.
                     </div>
                 </div><br><br>
                 <button class="btn btn-dark add-btn">Add</button>
@@ -79,3 +88,21 @@
             </form>
         </div>
     </div>
+
+    <script src="/js/location-search.js"></script>
+    
+    <script>
+        // Pass the MapTiler API key to the frontend - THIS MUST COME BEFORE DEBUG
+        const maptilerKey = '<%= typeof maptilerKey !== "undefined" ? maptilerKey : "" %>';
+    </script>
+
+    <script>
+        // Debug script - add this temporarily - NOW THIS COMES AFTER
+        console.log('Debug Info:');
+        console.log('MapTiler Key exists:', typeof maptilerKey !== 'undefined');
+        console.log('MapTiler Key length:', maptilerKey ? maptilerKey.length : 'undefined');
+        console.log('Location input found:', document.getElementById('location') !== null);
+        
+        // Test if our JavaScript is loading
+        console.log('LocationSearch class exists:', typeof LocationSearch !== 'undefined');
+    </script>
